@@ -7,7 +7,7 @@
 #include <pthread.h>    /* POSIX Threads */
 #include <string.h>     /* String handling */
 
-#include "lopp.h"
+#include "aloc.h"
 
 /* prototype for thread routine */
 void *print_message_function ( void *ptr );
@@ -20,16 +20,14 @@ typedef struct str_thdata
     char message[100];
 } thdata;
 
-static Lopp * lo;
-
 int main()
 {
     pthread_t thread1, thread2;  /* thread variables */
     thdata data1, data2;         /* structs to be passed to threads */
 
-    lo = new Lopp();
+    aloc_init();
 
-    printf("Numcore: %d\n", lo->getNumCores());
+    printf("Numcore: %d\n", aloc_getNumCores());
 
     /* initialize data to pass to thread 1 */
     data1.thread_no = 0;
@@ -61,7 +59,7 @@ void *print_message_function ( void *ptr )
 {
     thdata *data;
     data = (thdata *) ptr;  /* type cast to a pointer to thdata */
-    lo->bindThread(data->thread_no);
+    aloc_bindThreadGroup(data->thread_no, 2);
 
     /* do the work */
     printf("Thread %d says %s \n", data->thread_no, data->message);
