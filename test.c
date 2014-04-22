@@ -25,7 +25,7 @@ int main()
     pthread_t thread1, thread2;  /* thread variables */
     thdata data1, data2;         /* structs to be passed to threads */
 
-    aloc_init();
+    aloc_init(0);
 
     printf("Numcore: %d\n", aloc_getNumCores());
 
@@ -47,6 +47,7 @@ int main()
     pthread_join(thread1, NULL);
     pthread_join(thread2, NULL);
 
+    aloc_finalize();
     /* exit */
     exit(0);
 } /* main() */
@@ -63,9 +64,6 @@ void *print_message_function ( void *ptr )
 
     /* do the work */
     printf("Thread %d says %s \n", data->thread_no, data->message);
-
-    while (1) {
-    }
 
     pthread_exit(0); /* exit */
 } /* print_message_function ( void *ptr ) */
