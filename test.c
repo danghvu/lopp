@@ -22,30 +22,30 @@ typedef struct str_thdata
 
 int main()
 {
-    pthread_t thread1, thread2;  /* thread variables */
-    thdata data1, data2;         /* structs to be passed to threads */
+    pthread_t thread[20];  /* thread variables */
+    thdata data[20];         /* structs to be passed to threads */
 
     aloc_init(0);
 
     printf("Numcore: %d\n", aloc_getNumCores());
 
-    /* initialize data to pass to thread 1 */
-    data1.thread_no = 0;
-    strcpy(data1.message, "Hello!");
+    int i = 0;
+    for (;i<20;i++) {
+      /* initialize data to pass to thread 1 */
+      data[i].thread_no = i;
+      strcpy(data[i].message, "Hello!");
 
-    /* initialize data to pass to thread 2 */
-    data2.thread_no = 1;
-    strcpy(data2.message, "Hi!");
-
-    /* create threads 1 and 2 */
-    pthread_create (&thread1, NULL, &print_message_function, (void *) &data1);
-    pthread_create (&thread2, NULL, &print_message_function, (void *) &data2);
+      /* create threads 1 and 2 */
+      pthread_create (&thread[i], NULL, &print_message_function, (void *) &data[i]);
+    }
 
     /* Main block now waits for both threads to terminate, before it exits
        If main block exits, both threads exit, even if the threads have not
        finished their work */
-    pthread_join(thread1, NULL);
-    pthread_join(thread2, NULL);
+
+    for (i=0;i<20;i++) {
+      pthread_join(thread[i], NULL);
+    }
 
     aloc_finalize();
     /* exit */
